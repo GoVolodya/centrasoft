@@ -1,0 +1,66 @@
+<?php
+
+
+namespace app\core\form;
+
+
+use app\core\Model;
+
+
+class InputField extends BaseField
+{
+    /**
+     * Attributes for InputField class.
+     */
+    public const TYPE_TEXT = 'text';
+    public const TYPE_PASSWORD = 'password';
+    public const TYPE_NUMBER = 'number';
+    public const TYPE_EMAIL = 'email';
+    public string $type;
+
+    /**
+     * Field constructor.
+     * @param Model $model
+     * @param string $attribute
+     */
+    public function __construct(Model $model, string $attribute)
+    {
+        $this->type = self::TYPE_TEXT;
+        parent::__construct($model, $attribute);
+    }
+
+    /**
+     * Methods for InputField class.
+     */
+
+    /**
+     * @return $this
+     */
+    public function passwordField()
+    {
+        $this->type = self::TYPE_PASSWORD;
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function emailField()
+    {
+        $this->type = self::TYPE_EMAIL;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function renderInput(): string
+    {
+        return sprintf('<input type="%s" name="%s" value="%s" class="form-control %s">',
+            $this->type,
+            $this->attribute,
+            $this->model->{$this->attribute},
+            $this->model->hasError($this->attribute) ? ' is-invalid' : '',
+        );
+    }
+}
